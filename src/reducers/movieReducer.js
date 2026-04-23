@@ -11,7 +11,7 @@ const movieReducer = (state = initialState, action) => {
       switch(action.type) {
             case constants.FETCH_MOVIES:
                   updated['movies'] = action.movies;
-                  updated['selectedMovie'] = action.movies[0];
+                  //updated['selectedMovie'] = action.movies[0];
                   return updated;
             case constants.SET_MOVIE:
                   updated['selectedMovie'] = action.selectedMovie;
