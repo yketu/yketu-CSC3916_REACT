@@ -96,7 +96,7 @@ class MovieList extends Component {
         return (
             <div>
 
-                {/* 🔍 SEARCH BAR */}
+                {/* SEARCH BAR */}
                 <Form onSubmit={this.handleSearch} className="d-flex gap-2 m-3">
                     <Form.Control
                         type="text"
@@ -116,14 +116,14 @@ class MovieList extends Component {
                     </Button>
                 </Form>
 
-                {/* 🎯 SHOW RESULT COUNT (optional but good) */}
+                {/* SHOW RESULT COUNT */}
                 {this.state.searchResults !== null && (
                     <p className="ms-3">
                         Found {this.state.searchResults.length} result(s)
                     </p>
                 )}
 
-                {/* 🎬 MOVIE CAROUSEL */}
+                {/* MOVIE CAROUSEL */}
                 <Carousel onSelect={this.handleSelect}>
                     {moviesToShow &&
                         moviesToShow.map((movie) => (
@@ -143,16 +143,16 @@ class MovieList extends Component {
                                     </LinkContainer>
                                 </div>
 
-                            <Carousel.Caption>
-                                <h3>{movie.title}</h3>
-                                {this.state.searchResults === null && movie.avgRating && (
-                                    <>
-                                        <BsStarFill /> {movie.avgRating.toFixed(1)} &nbsp;&nbsp;
-                                    </>
-                                )}
-                                {movie.releaseDate}
-                            </Carousel.Caption>
-
+                                <Carousel.Caption>
+                                    <h3>{movie.title}</h3>
+                                    {this.state.searchResults === null && movie.avgRating && (
+                                        <>
+                                            <BsStarFill /> {movie.avgRating.toFixed(1)} &nbsp;&nbsp;
+                                        </>
+                                    )}
+                                    {movie.releaseDate}
+                                </Carousel.Caption>
+                            </Carousel.Item>  {/* ← THIS CLOSING TAG WAS MISSING! */}
                         ))}
                 </Carousel>
             </div>
