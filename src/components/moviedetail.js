@@ -54,99 +54,97 @@ class MovieDetail extends Component {
             this.setState({ message: data.message });
         }
     };
-    
+
     render() {
-        const DetailInfo = () => {
-            if (!this.props.selectedMovie) {
-                return <div>Loading....</div>;
-            }
-
-            return (
-                <Card>
-                    <Card.Header>Movie Detail</Card.Header>
-
-                    <Card.Body>
-                        <Image
-                            className="image"
-                            src={this.props.selectedMovie.imageUrl}
-                            thumbnail
-                        />
-                    </Card.Body>
-
-                    <ListGroup>
-                        <ListGroupItem>
-                            {this.props.selectedMovie.title}
-                        </ListGroupItem>
-
-                        <ListGroupItem>
-                            {this.props.selectedMovie.actors.map((actor, i) =>
-                                <p key={i}>
-                                    <b>{actor.actorName}</b> {actor.characterName}
-                                </p>
-                            )}
-                        </ListGroupItem>
-
-                        <ListGroupItem>
-                            <h4>
-                                <BsStarFill /> {this.props.selectedMovie.avgRating}
-                            </h4>
-                        </ListGroupItem>
-                    </ListGroup>
-
-                    {/* EXISTING REVIEWS */}
-                    <Card.Body>
-                        {this.props.selectedMovie.reviews.map((review, i) =>
+        if (!this.props.selectedMovie) {
+            return <div>Loading....</div>;
+        }
+    
+        return (
+            <Card>
+                <Card.Header>Movie Detail</Card.Header>
+    
+                <Card.Body>
+                    <Image
+                        className="image"
+                        src={this.props.selectedMovie.imageUrl}
+                        thumbnail
+                    />
+                </Card.Body>
+    
+                <ListGroup>
+                    <ListGroupItem>
+                        {this.props.selectedMovie.title}
+                    </ListGroupItem>
+    
+                    <ListGroupItem>
+                        {this.props.selectedMovie.actors.map((actor, i) =>
                             <p key={i}>
-                                <b>{review.username}</b> {review.review}
-                                &nbsp; <BsStarFill /> {review.rating}
+                                <b>{actor.actorName}</b> {actor.characterName}
                             </p>
                         )}
-                    </Card.Body>
-                    <Card.Body>
-                        <h5>Add Review</h5>
-
-                        {this.state.message && (
-                            <p>{this.state.message}</p>
-                        )}
-
-                        <form onSubmit={this.handleSubmit}>
-
-                            {/* Rating */}
-                            <select
-                                value={this.state.rating}
-                                onChange={(e) =>
-                                    this.setState({ rating: Number(e.target.value) })
-                                }
-                            >
-                                <option value="5">5</option>
-                                <option value="4">4</option>
-                                <option value="3">3</option>
-                                <option value="2">2</option>
-                                <option value="1">1</option>
-                            </select>
-
-                            {/* Review text */}
-                            <textarea
-                                value={this.state.reviewText}
-                                onChange={(e) =>
-                                    this.setState({ reviewText: e.target.value })
-                                }
-                                required
-                            />
-
-                            {/* Submit button */}
-                            <button type="submit">
-                                Submit Review
-                            </button>
-
-                        </form>
-                    </Card.Body>
-
-                </Card>
-            );
-        };
-
-        return <DetailInfo />;
+                    </ListGroupItem>
+    
+                    <ListGroupItem>
+                        <h4>
+                            <BsStarFill /> {this.props.selectedMovie.avgRating}
+                        </h4>
+                    </ListGroupItem>
+                </ListGroup>
+    
+                {/* EXISTING REVIEWS */}
+                <Card.Body>
+                    {this.props.selectedMovie.reviews.map((review, i) =>
+                        <p key={i}>
+                            <b>{review.username}</b> {review.review}
+                            &nbsp; <BsStarFill /> {review.rating}
+                        </p>
+                    )}
+                </Card.Body>
+    
+                {/* ADD REVIEW FORM */}
+                <Card.Body>
+                    <h5>Add Review</h5>
+    
+                    {this.state.message && (
+                        <p>{this.state.message}</p>
+                    )}
+    
+                    <form onSubmit={this.handleSubmit}>
+    
+                        {/* Rating */}
+                        <select
+                            value={this.state.rating}
+                            onChange={(e) =>
+                                this.setState({ rating: Number(e.target.value) })
+                            }
+                        >
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="1">1</option>
+                        </select>
+    
+                        {/* Review text */}
+                        <textarea
+                            value={this.state.reviewText}
+                            onChange={(e) =>
+                                this.setState({ reviewText: e.target.value })
+                            }
+                            required
+                        />
+    
+                        {/* Submit button */}
+                        <button type="submit">
+                            Submit Review
+                        </button>
+    
+                    </form>
+                </Card.Body>
+    
+            </Card>
+        );
     }
 }
 
