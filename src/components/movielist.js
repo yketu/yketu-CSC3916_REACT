@@ -143,13 +143,16 @@ class MovieList extends Component {
                                     </LinkContainer>
                                 </div>
 
-                                <Carousel.Caption>
-                                    <h3>{movie.title}</h3>
-                                    <BsStarFill />{" "}
-                                    {movie.avgRating?.toFixed(1) || "No rating"}{" "}
-                                    &nbsp;&nbsp; {movie.releaseDate}
-                                </Carousel.Caption>
-                            </Carousel.Item>
+                            <Carousel.Caption>
+                                <h3>{movie.title}</h3>
+                                {this.state.searchResults === null && movie.avgRating && (
+                                    <>
+                                        <BsStarFill /> {movie.avgRating.toFixed(1)} &nbsp;&nbsp;
+                                    </>
+                                )}
+                                {movie.releaseDate}
+                            </Carousel.Caption>
+
                         ))}
                 </Carousel>
             </div>
