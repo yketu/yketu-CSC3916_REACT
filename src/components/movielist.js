@@ -14,7 +14,6 @@ class MovieList extends Component {
             searchResults: null,
             isSearching: false
         };
-
         this.handleSelect = this.handleSelect.bind(this);
     }
 
@@ -23,16 +22,16 @@ class MovieList extends Component {
         dispatch(fetchMovies());
     }
 
-    handleSelect(selectedIndex) {
+    handleSelect(selectedIndex, e) {
         const { dispatch } = this.props;
 
-        const moviesToUse =
+        const list =
             this.state.searchResults !== null
                 ? this.state.searchResults
                 : this.props.movies;
 
-        if (moviesToUse && moviesToUse[selectedIndex]) {
-            dispatch(setMovie(moviesToUse[selectedIndex]));
+        if (list && list[selectedIndex]) {
+            dispatch(setMovie(list[selectedIndex]));
         }
     }
 
@@ -51,7 +50,7 @@ class MovieList extends Component {
         const token = localStorage.getItem('token');
 
         try {
-            const response = await fetch(
+            const res = await fetch(
                 `${process.env.REACT_APP_API_URL}/movies/search`,
                 {
                     method: 'POST',
@@ -65,30 +64,31 @@ class MovieList extends Component {
                 }
             );
 
-            const data = await response.json();
+            const data = await res.json();
 
-            if (response.ok) {
+            if (res.ok) {
                 this.setState({ searchResults: data });
-            } else {
-                alert(data.message || "Search failed");
             }
 
         } catch (err) {
             console.error(err);
-        } finally {
-            this.setState({ isSearching: false });
         }
+
+        this.setState({ isSearching: false });
     };
 
     clearSearch = () => {
         this.setState({
             searchTerm: '',
-            searchResults: null
+            searchResults: null,
+            isSearching: false
         });
+
+        this.props.dispatch(fetchMovies());
     };
 
     render() {
-        const moviesToShow =
+        const movieList =
             this.state.searchResults !== null
                 ? this.state.searchResults
                 : this.props.movies;
@@ -96,11 +96,10 @@ class MovieList extends Component {
         return (
             <div>
 
-                {/* SEARCH BAR */}
-                <Form onSubmit={this.handleSearch} className="d-flex gap-2 m-3">
+                {/* SEARCH */}
+                <Form onSubmit={this.handleSearch} className="d-flex m-3">
                     <Form.Control
-                        type="text"
-                        placeholder="Search movie or actor..."
+                        placeholder="Search movies or actors..."
                         value={this.state.searchTerm}
                         onChange={(e) =>
                             this.setState({ searchTerm: e.target.value })
@@ -108,7 +107,7 @@ class MovieList extends Component {
                     />
 
                     <Button type="submit" disabled={this.state.isSearching}>
-                        {this.state.isSearching ? "Searching..." : "Search"}
+                        Search
                     </Button>
 
                     <Button variant="secondary" onClick={this.clearSearch}>
@@ -116,18 +115,19 @@ class MovieList extends Component {
                     </Button>
                 </Form>
 
-                {/* SHOW RESULT COUNT */}
+                {/* COUNT */}
                 {this.state.searchResults !== null && (
                     <p className="ms-3">
                         Found {this.state.searchResults.length} result(s)
                     </p>
                 )}
 
-                {/* MOVIE CAROUSEL */}
+                {/* ORIGINAL CAROUSEL (PRESERVED STRUCTURE) */}
                 <Carousel onSelect={this.handleSelect}>
-                    {moviesToShow &&
-                        moviesToShow.map((movie) => (
+                    {movieList &&
+                        movieList.map((movie) => (
                             <Carousel.Item key={movie._id}>
+
                                 <div>
                                     <LinkContainer
                                         to={'/movie/' + movie._id}
@@ -145,25 +145,29 @@ class MovieList extends Component {
 
                                 <Carousel.Caption>
                                     <h3>{movie.title}</h3>
-                                    {this.state.searchResults === null && movie.avgRating && (
-                                        <>
-                                            <BsStarFill /> {movie.avgRating.toFixed(1)} &nbsp;&nbsp;
-                                        </>
-                                    )}
+
+                                    {/* hide rating only in search */}
+                                    {this.state.searchResults === null &&
+                                        movie.avgRating != null && (
+                                            <span>
+                                                <BsStarFill /> {movie.avgRating.toFixed(1)} &nbsp;&nbsp;
+                                            </span>
+                                        )}
+
                                     {movie.releaseDate}
                                 </Carousel.Caption>
-                            </Carousel.Item>  {/* ← THIS CLOSING TAG WAS MISSING! */}
+
+                            </Carousel.Item>
                         ))}
                 </Carousel>
+
             </div>
         );
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        movies: state.movie.movies
-    };
-};
+const mapStateToProps = (state) => ({
+    movies: state.movie.movies
+});
 
 export default connect(mapStateToProps)(MovieList);
