@@ -60,6 +60,11 @@ class MovieDetail extends Component {
             return <div>Loading....</div>;
         }
     
+        // Safety: ensure actors and reviews are arrays
+        const actors = this.props.selectedMovie.actors || [];
+        const reviews = this.props.selectedMovie.reviews || [];
+        const avgRating = this.props.selectedMovie.avgRating || 'No rating';
+    
         return (
             <Card>
                 <Card.Header>Movie Detail</Card.Header>
@@ -78,7 +83,7 @@ class MovieDetail extends Component {
                     </ListGroupItem>
     
                     <ListGroupItem>
-                        {this.props.selectedMovie.actors.map((actor, i) =>
+                        {actors.map((actor, i) =>
                             <p key={i}>
                                 <b>{actor.actorName}</b> {actor.characterName}
                             </p>
@@ -87,14 +92,14 @@ class MovieDetail extends Component {
     
                     <ListGroupItem>
                         <h4>
-                            <BsStarFill /> {this.props.selectedMovie.avgRating}
+                            <BsStarFill /> {avgRating}
                         </h4>
                     </ListGroupItem>
                 </ListGroup>
     
                 {/* EXISTING REVIEWS */}
                 <Card.Body>
-                    {this.props.selectedMovie.reviews.map((review, i) =>
+                    {reviews.map((review, i) =>
                         <p key={i}>
                             <b>{review.username}</b> {review.review}
                             &nbsp; <BsStarFill /> {review.rating}
